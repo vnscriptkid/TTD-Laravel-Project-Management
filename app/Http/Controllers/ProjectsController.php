@@ -14,10 +14,14 @@ class ProjectsController extends Controller
         return view('projects.index', compact('projects'));
     }
 
-    public function store() {
+    public function store(Request $request) {
         // validate
+        $attributes = $request->validate([
+            'title' => 'required',
+            'description' => 'required'
+        ]);
         // persist
-        Project::create(request(['title', 'description']));
+        Project::create($attributes);
         // redirect
         return redirect('/projects');
     }
