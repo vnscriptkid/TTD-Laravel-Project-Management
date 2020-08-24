@@ -8,15 +8,21 @@ use Tests\TestCase;
 
 class ProjectsTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function testExample()
+    use RefreshDatabase, WithFaker;
+    
+    public function test_a_user_can_create_a_project()
     {
-        $response = $this->get('/');
+        $this->withoutExceptionHandling();
+        
+        $attributes = [
+            'title' => $this->faker()->sentence(),
+            'description' => $this->faker()->paragraph()
+        ];
 
-        $response->assertStatus(200);
+        $this->post('/projects', $attributes)->assertRedirect('/projects');
+        
+        $this->assertDatabaseHas('projects', $attributes);
+
+        $this->get('/projects')->assertSee($attributes['title']);
     }
 }
