@@ -11,7 +11,7 @@ class ProjectTest extends TestCase
     use RefreshDatabase;
 
     public function test_it_has_path_method() {
-        $project = factory('App\Project')->create();
+        $project = factory(Project::class)->create();
 
         $this->assertEquals($project->path(), '/projects/' . $project->id);
     }
