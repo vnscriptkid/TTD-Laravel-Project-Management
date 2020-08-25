@@ -55,12 +55,48 @@ class ProjectsTest extends TestCase
         $this->post('/projects', $project)->assertRedirect('login');
     }
 
-    public function test_a_user_can_see_a_single_project() 
+    /* GET /projects */
+    public function test_a_guest_can_not_view_project_list() 
     {
-        $project = factory('App\Project')->create();
+        $this->get('/projects')->assertRedirect('login');
+    }
+
+    public function test_a_user_can_view_project_list() 
+    {
+        $this->be(factory(User::class)->create());
+        
+        $this->get('/projects')->assertStatus(200);
+    }
+
+    /* GET /projects/:id */
+    public function test_a_user_can_see_his_own_project() 
+    {
+        $user = factory(User::class)->create();
+        
+        $this->be($user);
+
+        $project = factory('App\Project')->create([
+            'owner_id' => $user->id
+        ]);
 
         $this->get($project->path())
             ->assertSee($project->title)
             ->assertSee($project->description);
+    }
+
+    public function test_a_user_can_not_see_project_of_others() 
+    {
+        $this->be(factory(User::class)->create());
+
+        $project = factory('App\Project')->create();
+
+        $this->get($project->path())->assertStatus(403);
+    }
+
+    public function test_a_guest_can_not_view_a_project() 
+    {
+        $project = factory('App\Project')->create();
+
+        $this->get($project->path())->assertRedirect('login');
     }
 }
