@@ -1,15 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="heading-1">Project List</h1>
-    <ul>
+    <div class="d-flex justify-content-between mb-3">
+        <h1 class="h1">My Projects</h1>
+        <button class="btn btn-info">Add Project</button>
+    </div>
+    <div class="d-flex flex-wrap justify-content-between">
         @forelse ($projects as $project)
-            <li>
-                <h3><a href="{{ $project->path() }}">{{ $project->title }}</a></h3>
+            <div class="shadow bg-white rounded mb-4 p-3 project-list-item">
+                <h3 class="h4">
+                    <a class="text-decoration-none text-dark" href="{{ $project->path() }}">{{ $project->title }}</a>
+                </h3>
                 <p>{{ $project->description }}</p>
-            </li>
+            </div>
         @empty
-            <li>There's no project</li>
+            <li>No project yet</li>
         @endforelse
-    </ul>
+    </div>
 @endsection
