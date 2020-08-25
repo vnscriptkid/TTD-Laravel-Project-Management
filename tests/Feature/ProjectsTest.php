@@ -14,14 +14,16 @@ class ProjectsTest extends TestCase
     
     public function test_a_user_can_create_a_project()
     {
-        $this->withoutExceptionHandling();
+        // $this->withoutExceptionHandling();
         
         $attributes = [
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
         ];
-
+        
         $this->actingAs(factory(User::class)->create());
+
+        $this->get('/projects/create')->assertStatus(200);
 
         $this->post('/projects', $attributes)->assertRedirect('/projects');
         
@@ -51,6 +53,8 @@ class ProjectsTest extends TestCase
     public function test_only_authenticated_user_can_create_a_project() 
     {
         $project = factory(Project::class)->raw();
+
+        $this->get('/projects/create')->assertRedirect('login');
 
         $this->post('/projects', $project)->assertRedirect('login');
     }
