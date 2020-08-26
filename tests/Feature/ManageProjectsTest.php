@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class ProjectsTest extends TestCase
+class ManageProjectsTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
     
@@ -21,7 +21,7 @@ class ProjectsTest extends TestCase
             'description' => $this->faker->paragraph(),
         ];
         
-        $this->actingAs(factory(User::class)->create());
+        $this->signIn();
 
         $this->get('/projects/create')->assertStatus(200);
 
@@ -36,7 +36,7 @@ class ProjectsTest extends TestCase
     {
         $project = factory(Project::class)->raw([ 'title' => '' ]);
 
-        $this->actingAs(factory(User::class)->create());
+        $this->signIn();
 
         $this->post('/projects', $project)->assertSessionHasErrors('title');
     }
@@ -45,7 +45,7 @@ class ProjectsTest extends TestCase
     {
         $project = factory(Project::class)->raw([ 'description' => '' ]);
 
-        $this->actingAs(factory(User::class)->create());
+        $this->signIn();
 
         $this->post('/projects', $project)->assertSessionHasErrors('description');
     }
@@ -77,7 +77,7 @@ class ProjectsTest extends TestCase
     {
         $user = factory(User::class)->create();
         
-        $this->be($user);
+        $this->signIn($user);
 
         $project = factory('App\Project')->create([
             'owner_id' => $user->id
@@ -90,7 +90,7 @@ class ProjectsTest extends TestCase
 
     public function test_a_user_can_not_see_project_of_others() 
     {
-        $this->be(factory(User::class)->create());
+        $this->signIn();
 
         $project = factory('App\Project')->create();
 

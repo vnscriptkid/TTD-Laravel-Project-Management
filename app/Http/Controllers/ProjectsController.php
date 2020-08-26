@@ -14,10 +14,8 @@ class ProjectsController extends Controller
         return view('projects.index', compact('projects'));
     }
 
-    public function show() 
+    public function show(Project $project) 
     {
-        $project = Project::find(request('project'));
-
         if (auth()->user()->isNot($project->owner)) {
             abort(403);
         }
