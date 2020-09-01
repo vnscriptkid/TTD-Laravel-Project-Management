@@ -59,6 +59,23 @@ class ManageProjectsTest extends TestCase
         $this->post('/projects', $project)->assertRedirect('login');
     }
 
+    public function test_user_can_only_see_his_own_projects() 
+    {
+        $projectOfOther = factory(Project::class)->create([
+            'owner_id' => factory(User::class)->create()->id
+        ]);
+
+        $myProject = factory(Project::class)->create([
+            'owner_id' => ($me = factory(User::class)->create())->id
+        ]);
+
+        $this->signIn($me);
+
+        $this->get('/projects')
+            ->assertDontSee($projectOfOther->title)
+            ->assertSee($myProject->title);
+    }
+
     /* GET /projects */
     public function test_a_guest_can_not_view_project_list() 
     {
