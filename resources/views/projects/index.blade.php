@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="d-flex justify-content-between mb-3">
+    <div class="d-flex justify-content-between mb-3 align-items-center">
         <h1 class="h1">My Projects</h1>
-        <button class="btn btn-info">Add Project</button>
+        <a href="/projects/create" class="btn btn-info">Add Project</a>
     </div>
     <div class="d-flex flex-wrap justify-content-between">
         @forelse ($projects as $project)
