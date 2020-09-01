@@ -13,6 +13,15 @@
                     <div>
                         <h4 class="h6 font-weight-bold">Tasks</h4>
                         <div>
+                            {{-- task add form --}}
+                            <form method="POST" action="{{ $project->path() . '/tasks' }}">
+                                @csrf
+                                <div class="form-group">
+                                  <label for="newTaskForm">Add a new task</label>
+                                  <input name="body" type="text" class="form-control-file" id="newTaskForm" required>
+                                </div>
+                              </form>
+                            {{-- task list --}}
                             @forelse ($project->tasks as $task)
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control" value="{{ $task->body }}">
@@ -24,26 +33,8 @@
                                     </div>
                                 </div>
                             @empty
-                                
+                                <div>No task yet</div>
                             @endforelse
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" value="Walk the dog">
-                                <div class="input-group-append">
-                                    <span class="input-group-text">Due today</span>
-                                    <div class="input-group-text">
-                                        <input type="checkbox" aria-label="Checkbox for following text input">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" value="Study Japanese">
-                                <div class="input-group-append">
-                                    <span class="input-group-text">Due now</span>
-                                    <div class="input-group-text">
-                                        <input type="checkbox" aria-label="Checkbox for following text input">
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div>
