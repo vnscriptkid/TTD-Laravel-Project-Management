@@ -88,11 +88,13 @@ class ProjectTasksTest extends TestCase
 
         $this->signIn($me);
 
-        $projectOfOther = factory(Project::class)->create();
+        $myProject = $me->projects()->create(factory(Project::class)->raw());
 
-        $task = $projectOfOther->tasks()->create([ 'body' => 'first task' ]);
+        $taskOfOther = factory(Task::class)->create();
 
-        $this->patch($task->path(), [ 'body' => 'updated', 'completed' => true ])
+        $url = $myProject->path() . '/tasks/' . $taskOfOther->id;
+
+        $this->patch($url, [ 'body' => 'updated', 'completed' => true ])
             ->assertStatus(403);
     }
 }
