@@ -1,3 +1,4 @@
+@include('layouts.errors')
 <div class="form-group">
     <label for="title">Title</label>
     <input value="{{ $project->title }}" name="title" type="text" class="form-control" id="title">

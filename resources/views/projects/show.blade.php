@@ -41,6 +41,7 @@
                             @endforelse
                         </div>
                     </div>
+                    {{-- notes --}}
                     <div>
                         <h4 class="h6 font-weight-bold">General Notes</h4>
                         <form method="POST" action="{{ $project->path() }}">
