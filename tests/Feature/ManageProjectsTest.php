@@ -14,22 +14,30 @@ class ManageProjectsTest extends TestCase
     
     public function test_a_user_can_create_a_project()
     {
-        // $this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
         
         $attributes = [
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
+            'notes' => $this->faker->sentence()
         ];
         
         $this->signIn();
 
         $this->get('/projects/create')->assertStatus(200);
 
-        $this->post('/projects', $attributes)->assertRedirect('/projects/1');
+        $response = $this->post('/projects', $attributes);
+
+        $project = Project::where($attributes)->first();
+
+        $response->assertRedirect($project->path());
+
+        $this->get($project->path())->assertSee($attributes['notes']);
         
         $this->assertDatabaseHas('projects', $attributes);
 
-        $this->get('/projects')->assertSee($attributes['title']);
+        $this->get('/projects')
+            ->assertSee($attributes['title']);
     }
 
     public function test_a_project_requires_a_title() 
@@ -50,7 +58,7 @@ class ManageProjectsTest extends TestCase
         $this->post('/projects', $project)->assertSessionHasErrors('description');
     }
 
-    public function test_only_authenticated_user_can_create_a_project() 
+    public function test_guest_can_not_create_project() 
     {
         $project = factory(Project::class)->raw();
 
@@ -119,5 +127,39 @@ class ManageProjectsTest extends TestCase
         $project = factory('App\Project')->create();
 
         $this->get($project->path())->assertRedirect('login');
+    }
+
+    // update a project
+    public function test_a_user_can_update_his_project() 
+    {
+        $this->withoutExceptionHandling();
+        
+        $project = factory(Project::class)->create();
+        
+        $this->signIn($project->owner);
+
+        $this->patch($project->path(), [ 'notes' => 'new notes' ])
+            ->assertRedirect($project->path());
+
+        $this->get($project->path())
+            ->assertSee('new notes');
+    }
+
+    public function test_a_guest_can_not_update_a_project() 
+    {
+        $project = factory(Project::class)->create();
+
+        $this->patch($project->path(), [ 'notes' => 'new notes' ])
+            ->assertRedirect('login');
+    }
+
+    public function test_a_user_can_not_update_project_of_other() 
+    {
+        $projectOfOther = factory(Project::class)->create();
+
+        $this->signIn();
+
+        $this->patch($projectOfOther->path(), [ 'notes' => 'new notes' ])
+            ->assertStatus(403);
     }
 }

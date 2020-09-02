@@ -43,7 +43,12 @@
                     </div>
                     <div>
                         <h4 class="h6 font-weight-bold">General Notes</h4>
-                        <textarea class="form-control" aria-label="With textarea"></textarea>
+                        <form method="POST" action="{{ $project->path() }}">
+                            @csrf
+                            @method("PATCH")
+                            <textarea name="notes" class="form-control" aria-label="With textarea">{{ $project->notes }}</textarea>
+                            <button type="submit" class="btn btn-success">Update</button>
+                        </form>
                     </div>
                 </div>
                 <div class="col-4">
