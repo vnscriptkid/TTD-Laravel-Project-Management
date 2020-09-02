@@ -132,8 +132,6 @@ class ManageProjectsTest extends TestCase
     // update a project
     public function test_a_user_can_update_his_project() 
     {
-        $this->withoutExceptionHandling();
-        
         $project = factory(Project::class)->create();
         
         $this->signIn($project->owner);

@@ -16,9 +16,7 @@ class ProjectsController extends Controller
 
     public function show(Project $project) 
     {
-        if (auth()->user()->isNot($project->owner)) {
-            abort(403);
-        }
+        $this->authorize('update', $project);
 
         return view('projects.show', compact('project'));
     }
@@ -45,17 +43,13 @@ class ProjectsController extends Controller
 
     public function update(Request $request, Project $project) 
     {
-        if (auth()->user()->isNot($project->owner)) {
-            abort(403);
-        }
-
+        $this->authorize('update', $project);
         
         $attributes = $request->validate([
             'title' => 'nullable',
             'description' => 'nullable',
             'notes' => 'nullable|min:3' 
         ]);
-        // dd($attributes);
             
         $project->update($attributes);
 
