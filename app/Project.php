@@ -27,4 +27,10 @@ class Project extends Model
     public function addTask($attributes) {
         return $this->tasks()->create($attributes);
     }
+
+    public function recordActivity($message) {
+        $this->activities()->create([
+            'description' => $message
+        ]);
+    }
 }
