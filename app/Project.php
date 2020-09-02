@@ -20,6 +20,10 @@ class Project extends Model
         return $this->hasMany(Task::class);
     }
 
+    public function activities() {
+        return $this->hasMany(Activity::class);
+    }
+
     public function addTask($attributes) {
         return $this->tasks()->create($attributes);
     }

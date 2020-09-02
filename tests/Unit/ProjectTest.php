@@ -2,10 +2,12 @@
 
 namespace Tests\Unit;
 
+use App\Activity;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Project;
 use App\User;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProjectTest extends TestCase
 {
@@ -25,7 +27,15 @@ class ProjectTest extends TestCase
         $this->assertInstanceOf(User::class, $project->owner);
     }
 
-    public function test_it_can_add_a_task() {
+    public function test_it_has_activities() 
+    {
+        $project = factory(Project::class)->create();
+
+        $this->assertInstanceOf(Collection::class, $project->activities);
+    }
+
+    public function test_it_can_add_a_task() 
+    {
         $project = factory(Project::class)->create();
 
         $task = $project->addTask([ 'body' => 'task body' ]);
