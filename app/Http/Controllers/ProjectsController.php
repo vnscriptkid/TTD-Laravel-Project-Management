@@ -46,13 +46,20 @@ class ProjectsController extends Controller
         $this->authorize('update', $project);
         
         $attributes = $request->validate([
-            'title' => 'nullable',
-            'description' => 'nullable',
-            'notes' => 'nullable|min:3' 
+            'title' => 'min:3',
+            'description' => 'min:3',
+            'notes' => 'min:3'
         ]);
             
         $project->update($attributes);
 
         return redirect($project->path());
+    }
+
+    public function edit(Request $request, Project $project) 
+    {
+        $this->authorize('update', $project);
+
+        return view('projects.edit', compact('project'));
     }
 }

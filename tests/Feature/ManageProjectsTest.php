@@ -136,6 +136,8 @@ class ManageProjectsTest extends TestCase
         
         $this->signIn($project->owner);
 
+        $this->get($project->path() . '/edit')->assertOk();
+
         $this->patch($project->path(), [ 'notes' => 'new notes' ])
             ->assertRedirect($project->path());
 
@@ -147,6 +149,8 @@ class ManageProjectsTest extends TestCase
     {
         $project = factory(Project::class)->create();
 
+        $this->get($project->path() . '/edit')->assertRedirect('login');
+
         $this->patch($project->path(), [ 'notes' => 'new notes' ])
             ->assertRedirect('login');
     }
@@ -156,6 +160,8 @@ class ManageProjectsTest extends TestCase
         $projectOfOther = factory(Project::class)->create();
 
         $this->signIn();
+
+        $this->get($projectOfOther->path() . '/edit')->assertStatus(403);
 
         $this->patch($projectOfOther->path(), [ 'notes' => 'new notes' ])
             ->assertStatus(403);

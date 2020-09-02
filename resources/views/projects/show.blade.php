@@ -52,6 +52,7 @@
                     </div>
                 </div>
                 <div class="col-4">
+                    <div><a href="{{ $project->path() . '/edit' }}" class="btn btn-warning">Edit Project</a></div>
                     <div>
                         <span>
                             <img src="https://randomuser.me/api/portraits/men/69.jpg" alt="X" class="rounded-circle avatar">
