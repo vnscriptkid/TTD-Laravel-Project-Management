@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Project;
+use App\Task;
 use Illuminate\Http\Request;
 
 class ProjectTasksController extends Controller
@@ -20,5 +21,24 @@ class ProjectTasksController extends Controller
         $project->addTask($attributes);
         // return project show view
         return view('projects.show', compact('project'));
+    }
+
+    public function update(Project $project, Task $task) {
+        // check if logged user owns the project
+        if (auth()->user()->isNot($project->owner)) {
+            abort(403);
+        }
+
+        request()->validate([
+            'body' => 'required',
+            'completed' => 'nullable' // optional
+        ]);
+
+        $task->update([
+            'body' => request('body'),
+            'completed' => request()->has('completed')
+        ]);
+
+        return redirect($project->path());
     }
 }

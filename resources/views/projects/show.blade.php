@@ -23,15 +23,19 @@
                               </form>
                             {{-- task list --}}
                             @forelse ($project->tasks as $task)
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control" value="{{ $task->body }}">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">Due tomorrow</span>
-                                        <div class="input-group-text">
-                                            <input type="checkbox" aria-label="Checkbox for following text input">
+                                <form method="POST" action="{{ $project->path() . '/tasks/' . $task->id }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <div class="input-group mb-3">
+                                        <input name="body" type="text" class="form-control" value="{{ $task->body }}">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Due tomorrow</span>
+                                            <div class="input-group-text">
+                                                <input name="completed" {{ $task->completed ? 'checked' : '' }} type="checkbox" onchange="this.form.submit()">
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </form>
                             @empty
                                 <div>No task yet</div>
                             @endforelse
