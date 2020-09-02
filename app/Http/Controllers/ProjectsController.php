@@ -25,9 +25,9 @@ class ProjectsController extends Controller
     {
         // validate
         $attributes = $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'notes' => 'min:3'
+            'title' => 'required|min:3',
+            'description' => 'required|min:3',
+            'notes' => 'nullable'
         ]);
 
         $project = auth()->user()->projects()->create($attributes);
@@ -48,7 +48,7 @@ class ProjectsController extends Controller
         $attributes = $request->validate([
             'title' => 'min:3',
             'description' => 'min:3',
-            'notes' => 'min:3'
+            'notes' => 'nullable'
         ]);
             
         $project->update($attributes);
