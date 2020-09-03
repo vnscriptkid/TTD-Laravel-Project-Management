@@ -10,7 +10,12 @@
                 @elseif ($activity->description == 'created')
                     You created a project
                 @elseif ($activity->description == 'updated')
-                    You updated the project
+                    You updated the project at
+                    {
+                        @foreach ($activity->changes['after'] as $key => $value)
+                            {{ $key }} {{ $loop->last ? '' : ',' }}
+                        @endforeach
+                    }
                 @endif
                 <p class="small text-secondary">{{$activity->created_at->diffForHumans()}}</p>
             </li>
