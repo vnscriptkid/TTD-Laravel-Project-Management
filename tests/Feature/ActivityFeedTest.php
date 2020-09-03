@@ -12,6 +12,7 @@ class ActivityFeedTest extends TestCase
 {
     use RefreshDatabase;
 
+    // project-related activities
     public function test_creating_project_generates_created_activity() 
     {
         $project = factory(Project::class)->create();
@@ -25,13 +26,23 @@ class ActivityFeedTest extends TestCase
     {
         $project = factory(Project::class)->create();
 
+        $oldTitle = $project->title;
+
         $project->update([ 'title' => 'title updated' ]);
 
         $this->assertDatabaseCount('activities', 2);
 
         $this->assertDatabaseHas('activities', [ 'description' => 'updated', 'project_id' => $project->id ]);
+
+        tap($project->activities->last(), function ($activity) use ($oldTitle, $project) {
+            $this->assertEquals($activity->changes, [
+                'before' => [ 'title' => $oldTitle ],
+                'after' => [ 'title' => $project->fresh()->title ]
+            ]);
+        });
     }
 
+    // task-related activities
     public function test_creating_task_generates_an_activity() 
     {
         $task = factory(Task::class)->create();
