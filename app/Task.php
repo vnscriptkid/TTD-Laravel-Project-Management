@@ -18,14 +18,14 @@ class Task extends Model
         parent::boot();
         
         static::created(function($task) {
-            $task->project->recordActivity('task_created');
+            $task->recordActivity('task_created');
         });
         
         static::updated(function($task) {
             $oldValue = $task->getOriginal('completed');
 
             if ($task->completed && !$oldValue) {
-                $task->project->recordActivity('task_completed');
+                $task->recordActivity('task_completed');
             }
         });
     }
@@ -37,5 +37,16 @@ class Task extends Model
     public function project() 
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function recordActivity($description) {
+        $this->activities()->create([
+            'project_id' => $this->project->id,
+            'description' => $description
+        ]);
+    }
+
+    public function activities() {
+        return $this->morphMany(Activity::class, 'subject');
     }
 }

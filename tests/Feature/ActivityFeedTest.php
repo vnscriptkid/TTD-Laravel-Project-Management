@@ -39,6 +39,12 @@ class ActivityFeedTest extends TestCase
         $this->assertDatabaseCount('activities', 2);
 
         $this->assertDatabaseHas('activities', [ 'description' => 'task_created', 'project_id' => $task->project->id ]);
+
+        tap($task->project->activities->last(), function($lastActivity) use ($task) {
+            $this->assertEquals($lastActivity->description, 'task_created');
+            $this->assertInstanceOf(Task::class, $lastActivity->subject);
+            $this->assertEquals($task->body, $lastActivity->subject->body);
+        });
     }
 
     public function test_completing_task_generates_an_activity() 
@@ -50,6 +56,12 @@ class ActivityFeedTest extends TestCase
         $this->assertDatabaseCount('activities', 3);
 
         $this->assertDatabaseHas('activities', [ 'description' => 'task_completed', 'project_id' => $task->project->id ]);
+
+        tap($task->project->activities->last(), function($lastActivity) use ($task) {
+            $this->assertEquals($lastActivity->description, 'task_completed');
+            $this->assertInstanceOf(Task::class, $lastActivity->subject);
+            $this->assertEquals($task->body, $lastActivity->subject->body);
+        });
     }
 
     public function test_just_updating_task_does_not_generates_an_activity() 
