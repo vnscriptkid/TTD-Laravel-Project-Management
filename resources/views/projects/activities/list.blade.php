@@ -4,13 +4,13 @@
         @foreach ($project->activities as $activity)
             <li class="list-group-item pb-0">
                 @if ($activity->description == 'task_completed')
-                    You completed the task "{{ $activity->subject->body }}"
+                    {{ $activity->user->name }} completed the task "{{ $activity->subject->body }}"
                 @elseif ($activity->description == 'task_created')
-                    You created a task "{{ $activity->subject->body }}"
+                    {{ $activity->user->name }} created a task "{{ $activity->subject->body }}"
                 @elseif ($activity->description == 'created')
-                    You created a project
+                    {{ $activity->user->name }} created a project
                 @elseif ($activity->description == 'updated')
-                    You updated the project at
+                    {{ $activity->user->name }} updated the project at
                     {
                         @foreach ($activity->changes['after'] as $key => $value)
                             {{ $key }} {{ $loop->last ? '' : ',' }}
