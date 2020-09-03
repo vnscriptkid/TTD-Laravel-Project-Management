@@ -71,12 +71,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3 bg-white">
-            <h4 class="h4 font-weight-bold">Latest updates</h4>
-            <ul>
-                <li>You completed XYZ</li>
-                <li>You added ABC</li>
-            </ul>
-        </div>
+        {{-- activies --}}
+        @include('projects.activities.list')
     </div>
 @endsection
