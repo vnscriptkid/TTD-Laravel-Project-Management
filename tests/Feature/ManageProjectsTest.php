@@ -166,4 +166,47 @@ class ManageProjectsTest extends TestCase
         $this->patch($projectOfOther->path(), [ 'notes' => 'new notes' ])
             ->assertStatus(403);
     }
+
+    // delete a project
+    public function test_a_user_can_delete_a_project() 
+    {
+        $this->withoutExceptionHandling();
+        
+        $user = $this->signIn();
+
+        $project = factory(Project::class)->create([ 'owner_id' => $user->id ]);
+
+        $this->delete($project->path())
+            ->assertRedirect('/projects');
+
+        $this->assertDatabaseMissing('projects', $project->only(['id']));
+    }
+
+    public function test_a_guest_can_not_delete_a_project() 
+    {
+        $project = factory(Project::class)->create();
+
+        $this->delete($project->path())
+            ->assertRedirect('login');
+    }
+
+    public function test_user_can_not_delete_project_of_other() 
+    {
+        $projectOfOther = factory(Project::class)->create();
+
+        $this->signIn();
+
+        $this->delete($projectOfOther->path())->assertStatus(403);
+
+        $this->assertDatabaseHas('projects', $projectOfOther->only(['id']));
+    }
+
+    public function test_user_can_not_delete_a_non_existed_project() 
+    {
+        $this->signIn();
+
+        $arbitraryProject = new Project([ 'id' => 1 ]);
+
+        $this->delete($arbitraryProject->path())->assertStatus(404);
+    }
 }
