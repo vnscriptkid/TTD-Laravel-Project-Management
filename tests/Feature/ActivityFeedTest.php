@@ -66,21 +66,32 @@ class ActivityFeedTest extends TestCase
 
         $this->assertDatabaseCount('activities', 3);
 
-        $this->assertDatabaseHas('activities', [ 'description' => 'task_completed', 'project_id' => $task->project->id ]);
+        $this->assertDatabaseHas('activities', [ 'description' => 'task_updated', 'project_id' => $task->project->id ]);
 
         tap($task->project->activities->last(), function($lastActivity) use ($task) {
-            $this->assertEquals($lastActivity->description, 'task_completed');
+            $this->assertEquals($lastActivity->description, 'task_updated');
             $this->assertInstanceOf(Task::class, $lastActivity->subject);
             $this->assertEquals($task->body, $lastActivity->subject->body);
         });
     }
 
-    public function test_just_updating_task_does_not_generates_an_activity() 
+    public function test_updating_a_task_generates_an_activity() 
     {
         $task = factory(Task::class)->create();
         
         $task->update([ 'body' => 'updated' ]);
 
-        $this->assertDatabaseCount('activities', 2);
+        $this->assertDatabaseCount('activities', 3);
+    }
+
+    public function test_deleting_a_task_create_activity() 
+    {
+        $task = factory(Task::class)->create();
+        
+        $task->delete();
+
+        $this->assertDatabaseCount('activities', 3);
+
+        $this->assertEquals($task->activities->last()->description, 'task_deleted');
     }
 }

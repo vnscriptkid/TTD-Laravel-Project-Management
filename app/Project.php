@@ -8,9 +8,11 @@ use Illuminate\Support\Arr;
 
 class Project extends Model
 {
+    use RecordsActivity;
+    
     protected $guarded = [];
 
-    public $old = [];
+    protected static $recordableEvents = ['created', 'updated'];
 
     public function path() {
         return '/projects/' . $this->id;
@@ -24,26 +26,11 @@ class Project extends Model
         return $this->hasMany(Task::class);
     }
 
-    public function activities() {
-        return $this->hasMany(Activity::class)->latest();
-    }
-
     public function addTask($attributes) {
         return $this->tasks()->create($attributes);
     }
-
-    public function recordActivity($description) {
-        $this->activities()->create([
-            'description' => $description,
-            'changes' => $this->buildChanges($description),
-            'user_id' => $this->owner->id
-        ]);
-    }
-
-    protected function buildChanges($description) {
-        return $description === 'updated' ? [
-            'before' => Arr::except(array_diff($this->old, $this->getAttributes()), 'updated_at'),
-            'after' => Arr::except($this->getChanges(), 'updated_at')
-        ] : null;
+    
+    public function activities() {
+        return $this->hasMany(Activity::class)->latest();
     }
 }

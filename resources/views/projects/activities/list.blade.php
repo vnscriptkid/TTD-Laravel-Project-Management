@@ -3,8 +3,8 @@
     <ul class="list-group">
         @foreach ($project->activities as $activity)
             <li class="list-group-item pb-0">
-                @if ($activity->description == 'task_completed')
-                    {{ $activity->user->name }} completed the task "{{ $activity->subject->body }}"
+                @if ($activity->description == 'task_updated')
+                    {{ $activity->user->name }} updated the task "{{ $activity->subject->body }}"
                 @elseif ($activity->description == 'task_created')
                     {{ $activity->user->name }} created a task "{{ $activity->subject->body }}"
                 @elseif ($activity->description == 'created')
