@@ -54,11 +54,13 @@
                 </div>
                 <div class="col-4">
                     <div><a href="{{ $project->path() . '/edit' }}" class="btn btn-warning">Edit Project</a></div>
-                    <div>
+                    {{-- project members --}}
+                    <div class="mt-3">
                         <span>
-                            <img src="https://randomuser.me/api/portraits/men/69.jpg" alt="X" class="rounded-circle avatar">
-                            <img src="https://randomuser.me/api/portraits/men/27.jpg" alt="Y" class="rounded-circle avatar">
-                            <img src="https://randomuser.me/api/portraits/women/75.jpg" alt="Z" class="rounded-circle avatar">
+                            <img src="{{ produceGravatarLink($project->owner) }}" alt="{{$project->owner->name}}" class="rounded-circle avatar">
+                            @foreach ($project->members as $member)
+                            <img src="{{ produceGravatarLink($member) }}" alt="{{$member->name}}" class="rounded-circle avatar">
+                            @endforeach
                         </span>
                         <button class="btn btn-info">Invite</button>
                     </div>
