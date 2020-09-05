@@ -27,7 +27,7 @@
                                     @csrf
                                     @method('PATCH')
                                     <div class="input-group mb-3">
-                                        <input name="body" type="text" class="form-control" value="{{ $task->body }}">
+                                        <input name="body" type="text" class="form-control" value="{{ $task->body }}" required>
                                         <div class="input-group-append">
                                             <span class="input-group-text">Due tomorrow</span>
                                             <div class="input-group-text">
@@ -70,6 +70,17 @@
                         </h3>
                         <p>{{ $project->description }}</p>
                     </div>
+                    {{-- invitation form --}}
+                    @if (auth()->user()->is($project->owner))
+                        <form action="{{ $project->path() . '/invitations' }}" method="POST" >
+                            @csrf
+                            @include('layouts.errors')
+                            <div class="form-group">
+                                <label for="invitation">Invite others to your project</label>
+                                <input name="email" type="text" class="form-control" id="invitation" placeholder="Enter his email" required>
+                            </div>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>

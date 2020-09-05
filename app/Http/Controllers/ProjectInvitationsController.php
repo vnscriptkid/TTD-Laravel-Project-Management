@@ -18,9 +18,7 @@ class ProjectInvitationsController extends Controller
         ]);
 
         // invitor must be owner of project
-        if (auth()->user()->isNot($project->owner)) {
-            abort(403);
-        }
+        $this->authorize('manage', $project);
 
         $userToInvite = User::where(['email' => request('email')])->firstOrFail();
 
