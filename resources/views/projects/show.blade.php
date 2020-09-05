@@ -71,7 +71,7 @@
                         <p>{{ $project->description }}</p>
                     </div>
                     {{-- invitation form --}}
-                    @if (auth()->user()->is($project->owner))
+                    @can('manage', $project)
                         <form action="{{ $project->path() . '/invitations' }}" method="POST" >
                             @csrf
                             @include('layouts.errors')
@@ -80,7 +80,7 @@
                                 <input name="email" type="text" class="form-control" id="invitation" placeholder="Enter his email" required>
                             </div>
                         </form>
-                    @endif
+                    @endcan
                 </div>
             </div>
         </div>

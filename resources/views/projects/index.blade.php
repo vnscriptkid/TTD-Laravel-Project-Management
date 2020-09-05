@@ -13,13 +13,16 @@
                     <a class="text-decoration-none text-dark" href="{{ $project->path() }}">{{ $project->title }}</a>
                 </h3>
                 <p>{{ $project->description }}</p>
-                <div>
-                    <form action="{{ $project->path() }}" method="POST" class="text-right">
-                        @method('delete')                    
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                    </form>
-                </div>
+                {{-- delete project --}}
+                @can('manage', $project)
+                    <div>
+                        <form action="{{ $project->path() }}" method="POST" class="text-right">
+                            @method('delete')                    
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                @endcan
             </div>
         @empty
             <li>No project yet</li>

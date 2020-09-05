@@ -170,8 +170,6 @@ class ManageProjectsTest extends TestCase
     // delete a project
     public function test_a_user_can_delete_a_project() 
     {
-        $this->withoutExceptionHandling();
-        
         $user = $this->signIn();
 
         $project = factory(Project::class)->create([ 'owner_id' => $user->id ]);
@@ -208,5 +206,21 @@ class ManageProjectsTest extends TestCase
         $arbitraryProject = new Project([ 'id' => 1 ]);
 
         $this->delete($arbitraryProject->path())->assertStatus(404);
+    }
+
+    public function test_member_can_not_delete_project_but_owner() 
+    {
+        $owner = factory(User::class)->create();
+        $project = factory(Project::class)->create([ 'owner_id' => $owner->id ]);
+        $member = factory(User::class)->create();
+        $project->invite($member);
+
+        $this->signIn($member);
+        
+        $this->delete($project->path())
+            ->assertStatus(403);
+
+        $this->get('/projects')
+            ->assertDontSee('Delete');
     }
 }
