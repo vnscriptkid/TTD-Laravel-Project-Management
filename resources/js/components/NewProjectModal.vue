@@ -44,7 +44,7 @@
                             class="form-control mb-2" 
                             placeholder="A task"
                             v-bind:key="form.tasks.indexOf(task)"
-                            v-model="task.value"
+                            v-model="task.body"
                         >
                     </div>
                     <!-- add task -->
@@ -53,7 +53,7 @@
             </div>
 
             <div class="text-right">
-                <button @click.prevent="$modal.hide('addNewProject')" class="btn btn-info">Cancel</button>
+                <button type="button" @click.prevent="$modal.hide('addNewProject')" class="btn btn-info">Cancel</button>
                 <button type="submit" class="btn btn-info">Create Project</button>
             </div>
         </form>
@@ -70,7 +70,7 @@ export default {
                 title: '',
                 description: '',
                 tasks: [
-                    { value: '' },
+                    { body: '' },
                 ]
             },
             errors: []

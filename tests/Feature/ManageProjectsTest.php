@@ -12,6 +12,7 @@ class ManageProjectsTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
     
+    // project creation
     public function test_a_user_can_create_a_project()
     {
         $this->withoutExceptionHandling();
@@ -82,6 +83,22 @@ class ManageProjectsTest extends TestCase
         $this->get('/projects')
             ->assertDontSee($projectOfOther->title)
             ->assertSee($myProject->title);
+    }
+
+    public function test_user_can_include_tasks_when_creating_project() 
+    {
+        $project = factory(Project::class)->raw([
+            'tasks' => [
+                [ 'body' => 'first task' ],
+                [ 'body' => 'second task' ]
+            ]
+        ]);
+
+        $this->signIn();
+
+        $this->post('/projects', $project);
+
+        $this->assertDatabaseCount('tasks', 2);
     }
 
     /* GET /projects */

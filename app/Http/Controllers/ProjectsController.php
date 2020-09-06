@@ -27,10 +27,15 @@ class ProjectsController extends Controller
         $attributes = $request->validate([
             'title' => 'required|min:3',
             'description' => 'required|min:3',
-            'notes' => 'nullable'
+            'notes' => 'nullable',
         ]);
 
         $project = auth()->user()->projects()->create($attributes);
+
+        if ($task = request('tasks')) {
+            $project->addTasks($task);
+        }
+
 
         if (request()->wantsJson()) {
             return ['message' => $project->path()];
