@@ -48,7 +48,7 @@
                         >
                     </div>
                     <!-- add task -->
-                    <button @click="addOneTask" class="btn">+ One more task</button>
+                    <button type="button" @click="addOneTask" class="btn">+ One more task</button>
                 </div>
             </div>
 
@@ -80,9 +80,17 @@ export default {
         addOneTask() {
             this.form.tasks.push({ value: '' });
         },
+        cleanTasks() {
+            return this.form.tasks.filter((task) => {
+                return !!task.body.trim();
+            });
+        },
+        getDataToSubmit() {
+            return { ...this.form, tasks: this.cleanTasks() };
+        },
         async submit() {
             try {
-                const response = await axios.post('/projects', this.form);
+                const response = await axios.post('/projects', this.getDataToSubmit());
                 location = response.data.message;
             } catch (error) {
                 this.errors = error.response.data.errors;
