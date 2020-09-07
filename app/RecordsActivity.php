@@ -62,4 +62,8 @@ trait RecordsActivity
             'after' => Arr::except($this->getChanges(), 'updated_at')
         ] : null;
     }
+
+    public function activities() {
+        return $this->morphMany(Activity::class, 'subject');
+    }
 }

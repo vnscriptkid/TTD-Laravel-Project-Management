@@ -34,7 +34,7 @@ class Project extends Model
         return $this->tasks()->createMany($attributes);
     }
     
-    public function activities() {
+    public function allActivities() {
         return $this->hasMany(Activity::class)->latest();
     }
 

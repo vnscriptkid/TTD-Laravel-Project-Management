@@ -25,8 +25,4 @@ class Task extends Model
     {
         return $this->belongsTo(Project::class);
     }
-
-    public function activities() {
-        return $this->morphMany(Activity::class, 'subject');
-    }
 }

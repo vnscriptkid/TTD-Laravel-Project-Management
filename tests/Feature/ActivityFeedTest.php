@@ -19,7 +19,11 @@ class ActivityFeedTest extends TestCase
 
         $this->assertDatabaseCount('activities', 1);
 
-        $this->assertDatabaseHas('activities', [ 'description' => 'created', 'project_id' => $project->id ]);
+        $this->assertDatabaseHas('activities', [ 
+            'description' => 'created', 
+            'subject_id' => $project->id,
+            'subject_type' => Project::class 
+        ]);
     }
 
     public function test_updating_project_generates_updated_activity() 
@@ -32,7 +36,11 @@ class ActivityFeedTest extends TestCase
 
         $this->assertDatabaseCount('activities', 2);
 
-        $this->assertDatabaseHas('activities', [ 'description' => 'updated', 'project_id' => $project->id ]);
+        $this->assertDatabaseHas('activities', [ 
+            'description' => 'updated', 
+            'subject_id' => $project->id,
+            'subject_type' => Project::class 
+        ]);
 
         tap($project->activities->last(), function ($activity) use ($oldTitle, $project) {
             $this->assertEquals($activity->changes, [
@@ -49,9 +57,13 @@ class ActivityFeedTest extends TestCase
 
         $this->assertDatabaseCount('activities', 2);
 
-        $this->assertDatabaseHas('activities', [ 'description' => 'task_created', 'project_id' => $task->project->id ]);
+        $this->assertDatabaseHas('activities', [ 
+            'description' => 'task_created', 
+            'subject_id' => $task->project->id,
+            'subject_type' => Task::class
+        ]);
 
-        tap($task->project->activities->last(), function($lastActivity) use ($task) {
+        tap($task->project->allActivities->last(), function($lastActivity) use ($task) {
             $this->assertEquals($lastActivity->description, 'task_created');
             $this->assertInstanceOf(Task::class, $lastActivity->subject);
             $this->assertEquals($task->body, $lastActivity->subject->body);
@@ -68,7 +80,7 @@ class ActivityFeedTest extends TestCase
 
         $this->assertDatabaseHas('activities', [ 'description' => 'task_updated', 'project_id' => $task->project->id ]);
 
-        tap($task->project->activities->last(), function($lastActivity) use ($task) {
+        tap($task->project->allActivities->last(), function($lastActivity) use ($task) {
             $this->assertEquals($lastActivity->description, 'task_updated');
             $this->assertInstanceOf(Task::class, $lastActivity->subject);
             $this->assertEquals($task->body, $lastActivity->subject->body);
